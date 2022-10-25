@@ -48,7 +48,7 @@ export const SignUp = (props) => {
         }
         if (phone) {
             setSignsubmit(true);
-            dispatch(signUp(user)).then(function (res) {
+            dispatch(signUp(user)).then((res) => {
                 setSignsubmit(false);
                 setError(true);
                 setMsg("Suuccefully Registered");
@@ -57,11 +57,11 @@ export const SignUp = (props) => {
                     navigate('/home')
                 }, 2000);
             },
-                function (err) {
+                (err) => {
                     setSignsubmit(false);
                     setError(true);
                     setMsg("Registration failed");
-                    setTimeout(function () {
+                    setTimeout(() => {
                         setError(false);
                     }, 2000);
                 }

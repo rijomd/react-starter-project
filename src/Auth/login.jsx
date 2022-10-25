@@ -61,11 +61,11 @@ export const Login = (props) => {
 
         // for backend connection
         dispatch(login(user))
-            .then(function (res) {
+            .then((res) => {
                 setLoginsubmit(false);
                 navigate('/home');
             },
-                function (err) {
+                (err) => {
                     setLoginsubmit(false);
                     setError(true);
                     setErrMsg("Authentification failed");
