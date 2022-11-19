@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import './App.css';
-import { CommonAll } from "./Home"
-import { Authpage } from "./Auth"
+import { CommonAll } from "./Views/Home/Components"
+import { Authpage } from "./Views/Auth/Components/authPage"
 
 function App() {
 

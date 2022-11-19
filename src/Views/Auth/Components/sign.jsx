@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { Loader, AlertBox } from '../Components';
-import { login, sampleLogin } from "../_Actions/authActions";
-import './auth.css'
+
+import { signUp } from "../Methods/Action";
+
+import { AlertBox } from '../../../Components/AlertBox/alertBox';
+import { Loader } from '../../../Components/Loader/loader';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -12,69 +14,68 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
+import '../Style/auth.css';
 
+export const SignUp = (props) => {
 
-// function Copyright(props) {
-//     return (
-//         <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//             {'Copyright © '}
-//             <Link color="inherit" href="####">
-//                 G-SHOP
-//             </Link>{' '}
-//             {new Date().getFullYear()}
-//             {'.'}
-//         </Typography>
-//     );
-// }
-
-
-export const Login = (props) => {
-
-    const { onSignupPage, islogin } = props;
-    const [isLoginsubmit, setLoginsubmit] = useState(false);
-    const [isError, setError] = useState(false);
-    const [msg, setErrMsg] = useState("");
-
-    let navigate = useNavigate();
+    const { onLoginPage, islogin } = props;
+    const [iserr, setError] = useState(false);
+    const [msg, setMsg] = useState('');
+    const [isSignsubmit, setSignsubmit] = useState(false);
     const dispatch = useDispatch();
+    let navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         let phone = data.get('phone');
         let password = data.get('password');
+        let confirm_password = data.get('confirm_password');
+
         let user = {
             phone: phone,
             password: password,
+            role: 2
         }
-        console.log(user, "user");
-        setLoginsubmit(true);
 
-        // just testing data
-        // dispatch(sampleLogin(user))
-        // navigate('/');
-
-
-        // for backend connection
-        dispatch(login(user))
-            .then((res) => {
-                setLoginsubmit(false);
-                navigate('/home');
+        if (password !== confirm_password) {
+            setError(true);
+            setMsg("Password not match");
+            setTimeout(function () {
+                setError(false);
+            }, 2000);
+            return null;
+        }
+        if (phone) {
+            setSignsubmit(true);
+            dispatch(signUp(user)).then((res) => {
+                setSignsubmit(false);
+                setError(true);
+                setMsg("Suuccefully Registered");
+                setTimeout(function () {
+                    setError(false);
+                    navigate('/home')
+                }, 2000);
             },
                 (err) => {
-                    setLoginsubmit(false);
+                    setSignsubmit(false);
                     setError(true);
-                    setErrMsg("Authentification failed");
-                });
+                    setMsg("Registration failed");
+                    setTimeout(() => {
+                        setError(false);
+                    }, 2000);
+                }
+            );
+        }
 
     };
 
     return (
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square className='login'>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square className='signup'>
             <Box
                 sx={{
                     my: 8,
@@ -88,9 +89,9 @@ export const Login = (props) => {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Login in
+                    Sign Up
                 </Typography>
-                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <Box component="form" Validate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
                         required
@@ -111,35 +112,36 @@ export const Login = (props) => {
                         id="password"
                         autoComplete="current-password"
                     />
-                    {/* <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    /> */}
-                    {isError && <AlertBox
+
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="confirm_password"
+                        label="Confirm Password"
+                        type="password"
+                        id="confirm_password"
+                        autoComplete="confirm-password"
+                    />
+                    {iserr && <AlertBox
                         message={msg}
                     />}
-                    {isLoginsubmit && Loader}
+                    {isSignsubmit && <Loader />}
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                        Sign In
+                        Sign Up
                     </Button>
                     <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2" className="link">
-                                Forgot password?
-                            </Link>
-                        </Grid>
                         <Grid item>
-                            {islogin && <Link to="" variant="body2" className="link" onClick={onSignupPage}>
-                                {"Don't have an account? Sign Up"}
+                            {!islogin && <Link to="" variant="body2" className="link" onClick={onLoginPage}>
+                                {"Alreay an existing user? Login"}
                             </Link>}
                         </Grid>
                     </Grid>
-                    {/* <Copyright sx={{ mt: 5 }} /> */}
                 </Box>
             </Box>
         </Grid>

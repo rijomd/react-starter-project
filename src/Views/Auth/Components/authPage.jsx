@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
+
+import '../Style/auth.css';
+
 import { Login } from "./login";
 import { SignUp } from "./sign";
-import './auth.css'
+
 
 export const Authpage = () => {
     const [islogin, setLogin] = useState(true);

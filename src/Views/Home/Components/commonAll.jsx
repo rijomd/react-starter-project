@@ -16,7 +16,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import { mainListItems } from './sidebarList';
 import { DashBoard } from './dashBoard'
-import {CustomerList} from '../Customers'
+import {CustomerList} from '../../Customers/Components'
 
 
 const drawerWidth = 240;
